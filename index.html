@@ -47,13 +47,12 @@ bodyClass: "page-calendar"
       <!-- Header -->
       <div class="tw-text-center tw-mb-8">
         <div class="tw-flex tw-items-center tw-justify-center tw-gap-3 tw-mb-3">
-          <!-- Claude Logo Mark -->
           <img src="https://cdn.brandfetch.io/idW5s392j1/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1738315809101" alt="Claude Logo" style="height: 32px; width: auto;">
           <div>
             <h1 class="tw-text-2xl md:tw-text-3xl tw-font-bold tw-text-claude-charcoal tw-m-0">Builder Club Events</h1>
           </div>
         </div>
-        <p class="tw-text-claude-charcoal-light tw-m-0">Georgetown University - February 2026</p>
+        <p class="tw-text-claude-charcoal-light tw-m-0" id="headerSubtitle">Georgetown University</p>
       </div>
 
       <!-- Legend -->
@@ -61,7 +60,7 @@ bodyClass: "page-calendar"
         <div class="tw-flex tw-flex-wrap tw-gap-3 md:tw-gap-5 tw-justify-center">
           <div class="tw-flex tw-items-center tw-gap-2">
             <div class="tw-w-3 tw-h-3 tw-rounded-full tw-bg-claude-orange"></div>
-            <span class="tw-text-sm tw-text-claude-charcoal">Tabling Session</span>
+            <span class="tw-text-sm tw-text-claude-charcoal">Meeting</span>
           </div>
         </div>
       </div>
@@ -75,7 +74,7 @@ bodyClass: "page-calendar"
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
               </svg>
             </button>
-            <h2 id="monthTitle" class="tw-text-lg tw-font-semibold tw-text-claude-charcoal tw-m-0">February 2026</h2>
+            <h2 id="monthTitle" class="tw-text-lg tw-font-semibold tw-text-claude-charcoal tw-m-0"></h2>
             <button id="nextMonth" class="tw-p-2 tw-rounded-xl hover:tw-bg-claude-sand disabled:tw-opacity-30 disabled:tw-cursor-not-allowed tw-transition-colors tw-text-claude-charcoal tw-border-0 tw-bg-transparent tw-cursor-pointer">
               <svg class="tw-w-5 tw-h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -153,26 +152,33 @@ bodyClass: "page-calendar"
 
 <script>
   const events = [
-    { date: '2026-02-25', time: '2:00 PM - 3:00 PM', title: 'Tabling Session', location: 'Red Square', type: 'tabling' },
+    { date: '2026-03-29', time: '4:00 PM - 5:00 PM', title: 'Meeting', location: 'ICC 106', type: 'meeting' },
+    { date: '2026-04-02', time: '8:00 PM - 9:00 PM', title: 'Meeting', location: 'Reiss 112', type: 'meeting' },
+    { date: '2026-04-09', time: '7:00 PM - 8:00 PM', title: 'Meeting', location: 'Reiss 112', type: 'meeting' },
+    { date: '2026-04-16', time: '7:00 PM - 8:00 PM', title: 'Meeting', location: 'Reiss 112', type: 'meeting' },
+    { date: '2026-04-23', time: '7:00 PM - 8:00 PM', title: 'Meeting', location: 'Reiss 112', type: 'meeting' },
   ];
 
   const typeColors = {
-    tabling: { bg: '#FDF2ED', border: '#DA7756', text: '#9A4F35', dot: '#DA7756' },
+    meeting: { bg: '#FDF2ED', border: '#DA7756', text: '#9A4F35', dot: '#DA7756' },
   };
 
   const months = [
-    { name: 'February 2026', year: 2026, month: 1 },
+    { name: 'March 2026', year: 2026, month: 2 },
+    { name: 'April 2026', year: 2026, month: 3 },
   ];
 
   let currentMonthIndex = 0;
 
   function formatDate(dateStr) {
-    const date = new Date(dateStr);
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
     return date.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   }
 
   function formatShortDate(dateStr) {
-    const date = new Date(dateStr);
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
     return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
   }
 
@@ -204,8 +210,9 @@ bodyClass: "page-calendar"
   function renderCalendar() {
     const { year, month, name } = months[currentMonthIndex];
     document.getElementById('monthTitle').textContent = name;
-    document.getElementById('prevMonth').disabled = true;
-    document.getElementById('nextMonth').disabled = true;
+    document.getElementById('headerSubtitle').textContent = `Georgetown University - ${name}`;
+    document.getElementById('prevMonth').disabled = currentMonthIndex === 0;
+    document.getElementById('nextMonth').disabled = currentMonthIndex === months.length - 1;
 
     const grid = document.getElementById('calendarGrid');
     grid.innerHTML = '';
